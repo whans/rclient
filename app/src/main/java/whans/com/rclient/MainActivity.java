@@ -1,5 +1,6 @@
 package whans.com.rclient;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,14 +8,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
     private NavigationView mNvDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +25,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Set a Toolbar to replace the ActionBar.
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         // Find our drawer view
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = setupDrawerToggle();
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.setDrawerListener(mDrawerToggle);
 
-        // Find our drawer view
         mNvDrawer = (NavigationView) findViewById(R.id.nvView);
-        // Setup drawer view
         setupDrawerContent(mNvDrawer);
 
         // Set the menu icon instead of the launcher icon.
@@ -38,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
         ab.setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     @Override
@@ -55,6 +63,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(mNvDrawer))
+            mDrawer.closeDrawers();
+        else
+            super.onBackPressed();
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -75,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         Class fragmentClass;
         String tag = "none";
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 fragmentClass = BlankFragment.class;
                 tag = "first";
