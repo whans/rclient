@@ -8,4 +8,8 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="Toolbar_Popup" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="android:background">#512DA8</item>
+    </style>
 </resources>
