@@ -1,5 +1,7 @@
 package whans.com.rclient;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,7 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,6 +65,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager = (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(MainActivity.this.getComponentName()));
+        }
+        return true;
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
@@ -96,27 +117,23 @@ public class MainActivity extends AppCompatActivity {
         // position
         Fragment fragment = null;
 
-        Class fragmentClass;
-        String tag = "none";
+        String tag;
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
-                fragmentClass = BlankFragment.class;
                 tag = "first";
                 break;
             case R.id.nav_second_fragment:
-                fragmentClass = BlankFragment.class;
-                tag = "seconde";
+                tag = "second";
                 break;
             case R.id.nav_third_fragment:
-                fragmentClass = BlankFragment.class;
                 tag = "third";
                 break;
             default:
-                fragmentClass = BlankFragment.class;
+                tag = "default";
         }
 
         try {
-            fragment = (Fragment) BlankFragment.newInstance(tag, tag);
+            fragment = BlankFragment.newInstance(tag, tag);
         } catch (Exception e) {
             e.printStackTrace();
         }

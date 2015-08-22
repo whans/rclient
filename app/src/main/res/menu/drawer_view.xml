@@ -3,8 +3,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
-            android:icon="@drawable/ic_drawer"
             android:checked="true"
+            android:icon="@drawable/ic_drawer"
             android:title="First" />
         <item
             android:id="@+id/nav_second_fragment"
@@ -25,4 +25,5 @@
             </menu>
         </item>
     </group>
+
 </menu>
